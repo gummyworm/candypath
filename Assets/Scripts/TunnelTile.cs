@@ -20,7 +20,7 @@ public class TunnelTile : MonoBehaviour {
 			if(go.tag.Equals("bouncer")) {
 				Bounce bouncer = go.GetComponent<Bounce>();
 				if(bouncer != null) {
-					bouncer.Bounce(bounceFactor);
+					bouncer.Jump(bounceFactor);
 				}
 			}
 		}

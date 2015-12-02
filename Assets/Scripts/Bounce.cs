@@ -32,7 +32,7 @@ public class Bounce : MonoBehaviour {
 		transform.position = pos;
 	}
 	
-	public void Bounce(float bounceFac) {
+	public void Jump(float bounceFac) {
 		height = amplitude * bounceFac;
 	}
 }
