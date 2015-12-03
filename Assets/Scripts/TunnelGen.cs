@@ -6,18 +6,20 @@ public class TunnelGen : MonoBehaviour {
 	public int tilesPerStep;
 	public float stepSize;
 	public float diameter;
-
-	public GameObject[] tunnel;
-
-	protected Dictionary<int, TunnelTile> tileMap;
-	protected List<TunnelTile[]> tiles; // tiles is the array of tunnel segments
+	
+	protected Dictionary<int, GameObject> tileMap;
+	protected List<GameObject[]> tiles; // tiles is the array of tunnel segments
 	protected float angleStep; // radians between each tile in a segment
+
+	public GameObject wallTile;
 
 	// Use this for initialization
 	void Start () {
-		tileMap = new Dictionary<int, TunnelTile> ();
-		tiles = new List<TunnelTile[]> ();
-		angleStep = (Mathf.PI*2.0f)/tilesPerStep;
+		tileMap = new Dictionary<int, GameObject> ();
+		tiles = new List<GameObject[]> ();
+		angleStep = (Mathf.PI*2.0f)/(float)tilesPerStep;
+
+		MakeTunnel ();
 	}
 	
 	// Update is called once per frame
@@ -26,36 +28,55 @@ public class TunnelGen : MonoBehaviour {
 	}
 
 	// MapTo maps the integer i to the given tile (for generation).
-	public void MapTo(int i, TunnelTile tile) {
+	public void MapTo(int i, GameObject tile) {
 		tileMap.Add (i, tile);
 	}
 
 	// AddSegment adds a segment of tiles from the given array of tile ID's.
-	public void AddSegment(int[] tiles) {
-		TunnelTile segment = new TunnelTile[tilesPerStep];
-		for(int i = 0; i < tiles.Length; ++i) {
-			if(tileMap.ContainsKey(tiles[i])) {
-				segment[i] = tileMap[tiles[i]];
+	public void AddSegment(int[] seg) {
+		GameObject[] segment = new GameObject[tilesPerStep];
+		for(int i = 0; i < seg.Length; ++i) {
+			if(tileMap.ContainsKey(seg[i])) {
+				segment[i] = (GameObject)Instantiate(tileMap[seg[i]]);
 			}
 			else {
 				segment[i] = null;
 			}
 		}
+		tiles.Add (segment);
 	}
 
-	// Generates a tunnel from all the segments that have been added.
+	// Generate places each tile in tiles according to the diameter and step parameters
 	public void Generate() {
-		Vector3 spawnAt = Vector3.zero;
+		float d = 0.0f;	//distance
 
-		foreach (TunnelTile[] segment in tiles) {
+		foreach (GameObject[] segment in tiles) {
 			int i;
 			float theta;
-			for(int i = 0, theta = 0.0f; i < segment.Length; ++i, theta += angleStep) {
-				spawnAt.x += Mathf.Cos(theta) * diameter;
-				spawnAt.y += Mathf.Sin(theta) * diameter;
-				GameObject.Instantiate(segment[i], spawnAt, Quaternion.identity);
+			for(i = 0, theta = 0.0f; i < segment.Length; ++i, theta += angleStep) {
+				segment[i].transform.position = new Vector3(
+					Mathf.Cos(theta) * diameter,
+					Mathf.Sin(theta) * diameter,
+					d);
+				segment[i].transform.rotation = Quaternion.LookRotation(segment[i].transform.position - new Vector3(0.0f, 0.0f, d));
 			}
-			spawnAt.z += stepSize;
+			d += stepSize;
 		}
+	}
+
+	virtual public void MakeTunnel() {
+		string s = "########";
+		int[] seg = new int[s.Length];
+
+		MapTo ('#', wallTile);
+
+		for(int i = 0; i < s.Length; ++i) {
+			seg[i] = s[i];
+		}
+
+		for(int i = 0; i < 10; ++i) {
+			AddSegment(seg);
+		}
+		Generate ();
 	}
 }
