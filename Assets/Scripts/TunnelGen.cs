@@ -11,7 +11,11 @@ public class TunnelGen : MonoBehaviour {
 	protected List<GameObject[]> tiles; // tiles is the array of tunnel segments
 	protected float angleStep; // radians between each tile in a segment
 
+
+	// put tiles used by your generator here
 	public GameObject wallTile;
+	public GameObject wallTile2;
+
 
 	// Use this for initialization
 	void Start () {
@@ -38,8 +42,8 @@ public class TunnelGen : MonoBehaviour {
 		for(int i = 0; i < seg.Length; ++i) {
 			if(tileMap.ContainsKey(seg[i])) {
 				segment[i] = (GameObject)Instantiate(tileMap[seg[i]]);
-			}
-			else {
+			} else {
+				Debug.Log ("key " + seg[i] + " not found");
 				segment[i] = null;
 			}
 		}
@@ -65,17 +69,24 @@ public class TunnelGen : MonoBehaviour {
 	}
 
 	virtual public void MakeTunnel() {
-		string s = "########";
-		int[] seg = new int[s.Length];
+		string s0 = "10101010";
+		string s1 = "01010101";
 
-		MapTo ('#', wallTile);
+		// map tiles
+		MapTo ('0', wallTile);
+		MapTo ('1', wallTile2);
 
-		for(int i = 0; i < s.Length; ++i) {
-			seg[i] = s[i];
+		int[] seg0 = new int[s0.Length];
+		int[] seg1 = new int[s1.Length];
+		for(int i = 0; i < s0.Length; ++i) {
+			seg0[i] = s0[i];
 		}
-
+		for(int i = 0; i < s1.Length; ++i) {
+			seg1[i] = s1[i];
+		}
 		for(int i = 0; i < 10; ++i) {
-			AddSegment(seg);
+			AddSegment(seg0);
+			AddSegment(seg1);
 		}
 		Generate ();
 	}

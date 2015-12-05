@@ -15,13 +15,12 @@ public class TunnelTile : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision col) {
+		Debug.Log ("bounce");
 		foreach (ContactPoint c in col.contacts) {
 			GameObject go = c.otherCollider.gameObject;
-			if(go.tag.Equals("bouncer")) {
-				Bounce bouncer = go.GetComponent<Bounce>();
-				if(bouncer != null) {
-					bouncer.Jump(bounceFactor);
-				}
+			Bounce bouncer = go.GetComponent<Bounce>();
+			if(bouncer != null) {
+				bouncer.Jump(bounceFactor);
 			}
 		}
 	}
