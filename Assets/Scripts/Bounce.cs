@@ -4,8 +4,9 @@ using System.Collections;
 public class Bounce : MonoBehaviour {
 	public float amplitude;	// amplitude of bounce
 	public float radius;	// radius of tunnel
-	public float forwardVel;
+	public float forwardVel = 1.0f;
 	public float lateralVel = 1.0f;
+	public float bounceSpeed = 1.0f;
 	public float bounceAngle;
 	public AnimationCurve bounceCurve;
 	public KeyCode moveLeft;
@@ -54,7 +55,7 @@ public class Bounce : MonoBehaviour {
 		}
 
 		// update height
-		height = bounceCurve.Evaluate (hangTime);
+		height = bounceCurve.Evaluate (hangTime * bounceSpeed);
 
 		// update position & rotation
 		transform.position = new Vector3((radius-height) * 2.0f * Mathf.Cos (bounceAngle),
