@@ -22,6 +22,7 @@ public class Bounce : MonoBehaviour {
 	protected float repeatTime;
 	
 	public bool bouncing;
+	protected bool canBounce;
 
 	protected Animator anim;
 	protected Scorer scorer;
@@ -31,16 +32,19 @@ public class Bounce : MonoBehaviour {
 		bounceNormal = new Vector2(Vector3.up.x, Vector3.up.y);
 		hangTime = 0f;
 		repeatTime = bounceCurve.keys [bounceCurve.keys.Length - 1].time;
-
+		canBounce = true;
 		anim = GetComponent<Animator> ();
 		scorer = GetComponent<Scorer> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		float t;
+
 		if (bouncing) {
 			return;
 		}
+
 		// player motion
 		if (Input.GetKey (moveLeft)) {
 			bounceAngle -= lateralVel * Time.deltaTime;
@@ -55,7 +59,11 @@ public class Bounce : MonoBehaviour {
 		}
 
 		// update height
-		height = bounceCurve.Evaluate (hangTime * bounceSpeed);
+		t = hangTime * bounceSpeed;
+		height = bounceCurve.Evaluate (t);
+		if (t >= repeatTime / 2.0f) {
+			canBounce = true;
+		}
 
 		// update position & rotation
 		transform.position = new Vector3((radius-height) * 2.0f * Mathf.Cos (bounceAngle),
@@ -66,12 +74,13 @@ public class Bounce : MonoBehaviour {
 	}
 
 	public void Jump(float bounceFac) {
-		if (bouncing) {
+		if (bouncing || !canBounce) {
 			return;
 		}
 		scorer.Score (1);
 		anim.SetBool ("bounce", true);
 		hangTime = 0.0f;
+		canBounce = false;
 	}
 
 	public void Die() {
