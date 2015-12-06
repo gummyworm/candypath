@@ -17,3 +17,4 @@ public class ChaseCamera : MonoBehaviour {
 		                                 target.transform.position.z - followDist);
 	}
 }
+	

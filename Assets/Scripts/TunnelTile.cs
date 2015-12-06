@@ -15,7 +15,6 @@ public class TunnelTile : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision col) {
-		Debug.Log ("bounce");
 		foreach (ContactPoint c in col.contacts) {
 			GameObject go = c.otherCollider.gameObject;
 			Bounce bouncer = go.GetComponent<Bounce>();

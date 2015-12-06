@@ -11,27 +11,33 @@ public class Bounce : MonoBehaviour {
 	public KeyCode moveLeft;
 	public KeyCode moveRight;
 
-	protected Vector2 basePos;	// position at angle=0
+	public string bounceAnim;
+
 	protected Vector2 bounceNormal;
 	protected Vector2 bounceFloor;
 
 	protected float height;
 	protected float hangTime;
 	protected float repeatTime;
+	
+	public bool bouncing;
 
-	protected bool canBounce;
+	protected Animator anim;
 
 	// Use this for initialization
 	void Start () {
 		bounceNormal = new Vector2(Vector3.up.x, Vector3.up.y);
-		hangTime = 0.0f;
-		canBounce = true;
+		hangTime = 0f;
 		repeatTime = bounceCurve.keys [bounceCurve.keys.Length - 1].time;
-		basePos = new Vector2 (transform.position.x, transform.position.y);
+
+		anim = GetComponent<Animator> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (bouncing) {
+			return;
+		}
 		// player motion
 		if (Input.GetKey (moveLeft)) {
 			bounceAngle -= lateralVel * Time.deltaTime;
@@ -48,24 +54,19 @@ public class Bounce : MonoBehaviour {
 		// update height
 		height = bounceCurve.Evaluate (hangTime);
 
-		// update position
-		transform.position = new Vector3((radius-height) * 2.0f * Mathf.Cos (bounceAngle), 
+		// update position & rotation
+		transform.position = new Vector3((radius-height) * 2.0f * Mathf.Cos (bounceAngle),
 		                                 (radius-height) * 2.0f * Mathf.Sin (bounceAngle),
 		                                 transform.position.z + forwardVel * Time.deltaTime);
-
-		if (height > amplitude / 2.0f) {
-			Debug.Log("RDY");
-			canBounce = true;
-		}
+		transform.rotation = Quaternion.LookRotation(transform.position - new Vector3(0.0f, 0.0f, transform.position.z));
 		hangTime += Time.deltaTime;
 	}
-	
+
 	public void Jump(float bounceFac) {
-		if (!canBounce) {
+		if (bouncing) {
 			return;
 		}
-		canBounce = false;
-		height = amplitude * bounceFac;
+		anim.SetBool ("bounce", true);
 		hangTime = 0.0f;
 	}
 
