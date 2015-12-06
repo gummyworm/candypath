@@ -23,6 +23,7 @@ public class Bounce : MonoBehaviour {
 	public bool bouncing;
 
 	protected Animator anim;
+	protected Scorer scorer;
 
 	// Use this for initialization
 	void Start () {
@@ -31,6 +32,7 @@ public class Bounce : MonoBehaviour {
 		repeatTime = bounceCurve.keys [bounceCurve.keys.Length - 1].time;
 
 		anim = GetComponent<Animator> ();
+		scorer = GetComponent<Scorer> ();
 	}
 	
 	// Update is called once per frame
@@ -66,6 +68,7 @@ public class Bounce : MonoBehaviour {
 		if (bouncing) {
 			return;
 		}
+		scorer.Score (1);
 		anim.SetBool ("bounce", true);
 		hangTime = 0.0f;
 	}
