@@ -2,8 +2,6 @@
 using System.Collections;
 
 public class TunnelTile : MonoBehaviour {
-	public float bounceFactor;
-
 	// Use this for initialization
 	void Start () {
 	
@@ -14,13 +12,8 @@ public class TunnelTile : MonoBehaviour {
 	
 	}
 
-	void OnCollisionEnter(Collision col) {
-		foreach (ContactPoint c in col.contacts) {
-			GameObject go = c.otherCollider.gameObject;
-			Bounce bouncer = go.GetComponent<Bounce>();
-			if(bouncer != null) {
-				bouncer.Jump(bounceFactor);
-			}
-		}
+	// Called when a bouncer "hops" on top of this tile
+	public virtual void OnBounce(Bounce bouncer) {
+
 	}
 }
