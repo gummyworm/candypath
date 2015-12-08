@@ -23,6 +23,7 @@ public class Bounce : MonoBehaviour {
 	
 	public bool bouncing;
 	protected bool canBounce;
+	protected bool dead;
 
 	protected Animator anim;
 	protected Scorer scorer;
@@ -41,7 +42,7 @@ public class Bounce : MonoBehaviour {
 	void Update () {
 		float t;
 
-		if (bouncing) {
+		if (bouncing || dead) {
 			return;
 		}
 
@@ -65,6 +66,14 @@ public class Bounce : MonoBehaviour {
 			canBounce = true;
 		}
 
+		// if height is < 0, are we dead?
+		if (height <= (transform.lossyScale.y / 2.0f)) {
+			if (Physics.Raycast (new Ray (transform.position, transform.TransformDirection (Vector3.down)))) {
+				height = transform.lossyScale.y / 4.0f;
+				Jump (1.0f);
+			}
+		}
+
 		// update position & rotation
 		transform.position = new Vector3((radius-height) * 2.0f * Mathf.Cos (bounceAngle),
 		                                 (radius-height) * 2.0f * Mathf.Sin (bounceAngle),
@@ -85,5 +94,6 @@ public class Bounce : MonoBehaviour {
 
 	public void Die() {
 		Debug.Log ("DIE");
+		dead = true;
 	}
 }
