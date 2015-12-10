@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 public class TunnelGen : MonoBehaviour {
 	public int tilesPerStep;
+	public int length = 25;
 	public float stepSize;
 	public float diameter;
 	
 	protected Dictionary<int, GameObject> tileMap;
 	protected List<GameObject[]> tiles; // tiles is the array of tunnel segments
 	protected float angleStep; // radians between each tile in a segment
-
-
+	
 	// put tiles used by your generator here
 	public GameObject wallTile;
 	public GameObject wallTile2;
@@ -84,7 +84,7 @@ public class TunnelGen : MonoBehaviour {
 		for(int i = 0; i < s1.Length; ++i) {
 			seg1[i] = s1[i];
 		}
-		for(int i = 0; i < 10; ++i) {
+		for(int i = 0; i < length; ++i) {
 			AddSegment(seg0);
 			AddSegment(seg1);
 		}

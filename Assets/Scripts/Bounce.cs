@@ -54,7 +54,7 @@ public class Bounce : MonoBehaviour {
 
 		// update height
 		float t = hangTime * bounceSpeed;
-		height = bounceCurve.Evaluate (t);
+		height = amplitude * bounceCurve.Evaluate (t);
 		if (t >= repeatTime / 2.0f) {
 			canBounce = true;
 		}
