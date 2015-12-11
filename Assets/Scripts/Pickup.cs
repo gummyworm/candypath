@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Pickup : MonoBehaviour {
@@ -23,6 +23,7 @@ public class Pickup : MonoBehaviour {
 			}
 			if (b != null) {
 				OnPick(b);
+				Destroy (b.gameObject);	// once "picked up", destroy the gameobject.
 			}
 		}
 	}
